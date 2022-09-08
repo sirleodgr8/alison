@@ -1,4 +1,4 @@
-import 'package:alison/ui/second_screen.dart';
+import 'package:alison/ui/widget/contact_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:faker/faker.dart';
 import '../data/contact.dart';
@@ -23,6 +23,7 @@ class _ContactPageListState extends State<ContactPageList> {
           phoneNumber: faker.person.random.integer(1000000).toString(),
           email: faker.internet.email());
     });
+   print(faker.person.firstName());
   }
 
   @override
@@ -33,28 +34,21 @@ class _ContactPageListState extends State<ContactPageList> {
           itemCount: _contacts.length,
           itemBuilder: (context, index) {
             var contact = _contacts[index];
-            return GestureDetector(
-              onTap: (){
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => SecondScreen(name: contact.name, email: contact.email, phoneNumber: contact.phoneNumber, contact: contact,))
-                );
-              },
-              child: ListTile(
-                title: Text(contact.name),
-                subtitle: Text(contact.email),
-                trailing: IconButton(
-                  icon: Icon(
-                    contact.isFavorite ? Icons.star : Icons.star_border,
-                    color: contact.isFavorite ? Colors.amber : Colors.grey,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      contact.isFavorite = !contact.isFavorite;
-                    });
-                  },
-                ),
-              ),
-            );
+            print(contact.name);
+            return ContactTile(contact: contact,name: contact.name, email: contact.email, phoneNumber: contact.phoneNumber, isFavoritePressed: (){
+              setState(() {
+                contact.isFavorite = !contact.isFavorite;
+                _contacts.sort((a,b){
+                  if(a.isFavorite){
+                    return -1;
+                  } else if(b.isFavorite){
+                    return 1;
+                  } else {
+                    return 0;
+                  }
+                });
+              });
+            });
           }),
     );
   }

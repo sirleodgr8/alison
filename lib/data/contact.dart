@@ -11,3 +11,4 @@ class Contact{
     this.isFavorite = false,
 });
 }
+
